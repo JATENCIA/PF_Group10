@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const {
@@ -12,6 +13,7 @@ routerGetUser function which is imported from the usersController.js file. */
 router.get("/", (req, res) => {
   routerGetUser(req, res);
 });
+
 
 /* This is a route that is being created. The first argument is the path, the second is a callback
 function that takes in a request and response object. The callback function is calling the

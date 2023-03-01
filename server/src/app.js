@@ -24,6 +24,7 @@ app.use((_req, res, next) => {
 });
 app.use(morgan("dev"));
 app.use("/", router);
+
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to PF server group 10");
 });
