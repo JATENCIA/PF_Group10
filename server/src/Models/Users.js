@@ -10,7 +10,6 @@ const userSchema = mongoose.Schema({
 
   image: {
     type: String,
-    default: "http://cdn.onlinewebfonts.com/svg/img_141364.png",
   },
 
   lastName: {
