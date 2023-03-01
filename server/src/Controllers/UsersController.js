@@ -90,7 +90,7 @@ const routerPostUser = async (req, res) => {
       dni: user.dni,
       name: user.name,
       eMail: user.eMail,
-      image: user.image || '"http://cdn.onlinewebfonts.com/svg/img_141364.png"',
+      image: user.image || "http://cdn.onlinewebfonts.com/svg/img_141364.png",
       password: passwordHash,
       lastName: user.lastName,
       telephone: user.telephone,
