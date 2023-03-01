@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const morgan = require("morgan");
+const { MONGODB } = require("./db");
 const router = require("./src/Routes/Index");
 const cookieParser = require("cookie-parser");
 
@@ -29,6 +30,8 @@ app.use("/", router);
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to PF server group 10");
 });
+
+MONGODB();
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
