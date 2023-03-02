@@ -1,28 +1,16 @@
 const mongoose = require("mongoose");
 
-const userSchema = mongoose.Schema({
+const restaurantSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
     minLength: 3,
     maxLength: 50,
+    unique: true,
   },
 
   image: {
     type: String,
-  },
-
-  lastName: {
-    type: String,
-    minLength: 3,
-    maxLength: 50,
-  },
-
-  dni: {
-    type: Number,
-    unique: true,
-    minLength: 7,
-    maxLength: 10,
   },
 
   eMail: {
@@ -34,6 +22,7 @@ const userSchema = mongoose.Schema({
   location: {
     type: String,
     ref: "Location",
+    required: true,
   },
 
   telephone: {
@@ -41,6 +30,7 @@ const userSchema = mongoose.Schema({
     unique: true,
     minLength: 7,
     maxLength: 10,
+    required: true,
   },
 
   baneado: {
@@ -55,26 +45,17 @@ const userSchema = mongoose.Schema({
     },
   ],
 
-  password: {
-    type: String,
-    required: true,
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "Users",
   },
 
-  favorites: {
-    type: Array,
-  },
-
-  isSeller: {
-    type: Boolean,
-    default: false,
-  },
-
-  restaurant: [
+  product: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "Restaurants",
+      ref: "Products",
     },
   ],
 });
 
-module.exports = mongoose.model("Users", userSchema);
+module.exports = mongoose.model("Restaurants", restaurantSchema);
