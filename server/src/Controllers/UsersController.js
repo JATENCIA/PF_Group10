@@ -32,8 +32,8 @@ const routerPostSignin = async (req, res) => {
       }
     );
     res.status(200).json({ oldUser, token });
-  } catch (err) {
-    res.status(500).json({ message: "Something went wrong" });
+  } catch (error) {
+    res.status(500).json({ messaje: `${error}` });
   }
 };
 
@@ -69,7 +69,7 @@ const routerGetUser = async (req, res) => {
       res.status(200).json(users);
     }
   } catch (error) {
-    res.status(500).json(`Error ${error}`);
+    res.status(500).json({ messaje: `${error}` });
   }
 };
 
@@ -107,7 +107,7 @@ const routerPostUser = async (req, res) => {
     res.status(200).json({ saveUser, token });
     //eMail1(user.eMail);
   } catch (error) {
-    res.status(500).send(`{messaje: ${error}}`);
+    res.status(500).json({ messaje: `${error}` });
   }
 };
 
