@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const morgan = require("morgan");
-const router = require("./Routes");
+const { MONGODB } = require("../db");
+const router = require("./Routes/Index");
 const cookieParser = require("cookie-parser");
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,4 +25,9 @@ app.use((_req, res, next) => {
 app.use(morgan("dev"));
 app.use("/", router);
 
+app.get("/", (req, res) => {
+  res.status(200).send("Welcome to PF server group 10");
+});
+
+MONGODB();
 module.exports = app;
