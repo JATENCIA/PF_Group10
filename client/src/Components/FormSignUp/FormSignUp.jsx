@@ -5,8 +5,7 @@ import { provinces } from '../utilities/data'
 import axios from 'axios'
 import { useState } from 'react'
 
-// const urlApi = 'http://localhost:3001'
-const urlApi = 'https://e-winespf.herokuapp.com'
+const urlApi = 'http://localhost:3001'
 
 export default function FormLogin () {
   const dispatch = useDispatch() //eslint-disable-line
@@ -16,7 +15,9 @@ export default function FormLogin () {
       email: '',
       password: '',
       copyPassword: '',
-      region: ''
+      region: '',
+      ciudad: '',
+      direccion: ''
     },
     validationSchema: schemaValidateUser,
     onSubmit: async (values, { resetForm }) => {

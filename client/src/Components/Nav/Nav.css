@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+#btn {
+    display: none;
+}
+
+.opciones a, icon2{
+    position: relative;
+    display: block;
+    text-decoration: none;
+    transition: all 200ms ease-out;
+}
+
+.opciones a{
+    margin-bottom: -15px;
+    opacity: 0;
+    visibility: hidden;
+}
+
+#btn:checked~ .opciones a{
+    margin-bottom: 10px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.nav{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+
+.link{
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    font-family: "Quicksand";
+    height: 80px;
+    width: 130px;
+    align-items: center;
+    color: #5B2A86;
+   
+}
+.icono{
+    margin-top: 20px;
+    height: 50px;
+    width: 50px;
+}
+
+.navp{
+    position: static;
+    font-style: normal;
+    font-family: 'Pacifico'; 
+    color: #360568;
+    font-size: 50px;
+}
+
+.navp2{
+    position: absolute;
+    font-family: "Quicksand";
+    color: #7785AC;
+    font-size: 15px;
+    left: 9%;
+    top: 7%;
+
+}
