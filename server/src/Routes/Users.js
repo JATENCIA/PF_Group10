@@ -6,6 +6,7 @@ const {
   routerPostUser,
   routerPostSignin,
 } = require("../Controllers/UsersController");
+const { upload, cloudinary } = require("../middleware/multer");
 
 /* This is a route that is being created. The first argument is the path, the second is a callback
 function that takes in a request and response object. The callback function is calling the
@@ -18,14 +19,12 @@ router.get("/", (req, res) => {
 /* This is a route that is being created. The first argument is the path, the second is a callback
 function that takes in a request and response object. The callback function is calling the
 routerPostUser function which is imported from the usersController.js file. */
-router.post("/", (req, res) => {
-  routerPostUser(req, res);
-});
+router.post("/", upload.single("image"), routerPostUser);
 
 /* This is a route that is being created. The first argument is the path, the second is a callback
 function that takes in a request and response object. The callback function is calling the
 routerPostSignin function which is imported from the usersController.js file. */
-router.post("/singin", (req, res) => {
+router.post("/login", (req, res) => {
   routerPostSignin(req, res);
 });
 

@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
 
   image: {
     type: String,
+    default: "https://res.cloudinary.com/dvl15ot8y/image/upload/v1677766493/pestana-de-incognito_fzw35u.jpg"
   },
 
   lastName: {

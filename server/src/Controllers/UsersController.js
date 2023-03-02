@@ -85,12 +85,14 @@ const routerPostUser = async (req, res) => {
     // validateCreate;
     //validateUser(req, res);
     const user = userSchema(req.body);
+    const { path, filename } = req.file;
+    const image = `${path}%${filename}`;
     let passwordHash = await bcryptjs.hash(user.password, 12);
     const newUser = await new Users({
       dni: user.dni,
       name: user.name,
       eMail: user.eMail,
-      image: user.image || "http://cdn.onlinewebfonts.com/svg/img_141364.png",
+      image,
       password: passwordHash,
       lastName: user.lastName,
       telephone: user.telephone,
