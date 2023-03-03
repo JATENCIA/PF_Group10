@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const Users = require("../Models/Users");
 const userSchema = require("../Models/Users");
+const { generarAleatorios } = require("../Password/password");
 
 /**
  * It takes the email and password from the request body, checks if the user exists, if the user
@@ -85,13 +86,26 @@ const routerPostUser = async (req, res) => {
     // validateCreate;
     //validateUser(req, res);
     const user = userSchema(req.body);
-    let passwordHash = await bcryptjs.hash(user.password, 12);
+    const pass = generarAleatorios();
+    console.log(
+      "🚀 ~ file: UsersController.js:95 ~ routerPostUser ~ pass:",
+      pass
+    );
+    let passwordHash;
+    if (user.password.length) {
+      passwordHash = await bcryptjs.hash(user.password, 12);
+    }
+    let passdHash = await bcryptjs.hash(pass, 12);
+    console.log(
+      "🚀 ~ file: UsersController.js:100 ~ routerPostUser ~ passdHash:",
+      passdHash
+    );
     const newUser = await new Users({
       dni: user.dni,
       name: user.name,
       eMail: user.eMail,
-      image: user.image || '"http://cdn.onlinewebfonts.com/svg/img_141364.png"',
-      password: passwordHash,
+      image: user.image || "http://cdn.onlinewebfonts.com/svg/img_141364.png",
+      password: passwordHash || passdHash,
       lastName: user.lastName,
       telephone: user.telephone,
     });

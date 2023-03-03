@@ -10,14 +10,21 @@ const Restaurants = require("../Models/Restaurants");
 const routerGetProducts = async (req, res) => {
   try {
     const { name } = req.query;
-    const products = await Products.find({});
+    const products = await Products.find({}).populate("restaurant", {
+      name: 1,
+      image: 1,
+      eMail: 1,
+      location: 1,
+      telephone: 1,
+    });
 
     if (name) {
       let product = products.filter((product) =>
         product.name.toLowerCase().includes(name.toLowerCase())
       );
+
       product.length
-        ? res.status(200).json(product)
+        ? res.status(200).json({ product: product })
         : res
             .status(201)
             .json({ messaje: "sorry, this option is not available" });

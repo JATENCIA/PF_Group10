@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minLength: 3,
+    minLength: 2,
     maxLength: 50,
   },
 
@@ -51,7 +51,7 @@ const userSchema = mongoose.Schema({
   review: [
     {
       type: mongoose.Types.ObjectId,
-      ref: "Review",
+      ref: "Reviews",
     },
   ],
 

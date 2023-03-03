@@ -9,15 +9,42 @@ const Users = require("../Models/Users");
  */
 const routerGetRestaurants = async (req, res) => {
   try {
-    const { name } = req.query;
+    let restaurant = [];
+    const { nameProduct } = req.query;
+    const { nameRestaurant } = req.query;
     const restaurants = await Restaurants.find({})
-      .populate("review")
-      .populate("user")
-      .populate("product");
-    if (name) {
-      let restaurant = restaurants.filter((elem) => {
-        elem.name.toLowerCase().includes(name.toLowerCase());
+      .populate("user", {
+        name: 1,
+        image: 1,
+        lastName: 1,
+        dni: 1,
+        eMail: 1,
+        location: 1,
+        telephone: 1,
+      })
+      .populate("product", {
+        name: 1,
+        price: 1,
+        image: 1,
+        discount: 1,
+        description: 1,
+      })
+      .populate("review", { description: 1, rate: 1 });
+    if (nameProduct) {
+      restaurants.map((elem) => {
+        let boolean = true;
+        elem.product?.forEach((product) => {
+          if (boolean) {
+            if (
+              product.name.toLowerCase().includes(nameProduct.toLowerCase())
+            ) {
+              restaurant.push(elem);
+              boolean = false;
+            }
+          }
+        });
       });
+
       restaurant.length
         ? res.status(200).json(restaurant)
         : res.status(201).json("the restaurant doesn't exist");
