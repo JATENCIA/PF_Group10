@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const Users = require("../Models/Users");
 const userSchema = require("../Models/Users");
+const Restaurants = require("../Models/Restaurants");
 const { generarAleatorios } = require("../Password/password");
 
 /**
@@ -47,20 +48,12 @@ const routerPostSignin = async (req, res) => {
 const routerGetUser = async (req, res) => {
   try {
     const { dni } = req.query;
-    const users = await Users.find();
-    // .populate("review", { description: 1, rate: 1, car: 1 })
-    // .populate("reviewAccesories", {
-    //   description: 1,
-    //   rate: 1,
-    //   accessories: 1,
-    // })
-    // .populate("billing", {
-    //   invoice_number: 1,
-    //   full_value: 1,
-    //   discount: 1,
-    //   car: 1,
-    //   accessories: 1,
-    // });
+    const users = await Users.find().populate("review", {
+      description: 1,
+      rate: 1,
+      restaurant: 1,
+    });
+
     if (dni) {
       let userDni = users.filter((user) => user.dni === Number(dni));
       userDni.length
@@ -86,20 +79,17 @@ const routerPostUser = async (req, res) => {
     // validateCreate;
     //validateUser(req, res);
     const user = userSchema(req.body);
+    /* Generating a random password. */
     const pass = generarAleatorios();
-    console.log(
-      "🚀 ~ file: UsersController.js:95 ~ routerPostUser ~ pass:",
-      pass
-    );
+
     let passwordHash;
+    /* If the user has a password, it encrypts it. */
     if (user.password.length) {
       passwordHash = await bcryptjs.hash(user.password, 12);
     }
+    /* Encrypting the password. */
     let passdHash = await bcryptjs.hash(pass, 12);
-    console.log(
-      "🚀 ~ file: UsersController.js:100 ~ routerPostUser ~ passdHash:",
-      passdHash
-    );
+
     const newUser = await new Users({
       dni: user.dni,
       name: user.name,
@@ -125,4 +115,99 @@ const routerPostUser = async (req, res) => {
   }
 };
 
-module.exports = { routerGetUser, routerPostUser, routerPostSignin };
+/**
+ * It takes the id of a restaurant and the eMail of a user, then it checks if the restaurant is already
+ * in the user's favorites list, if it is, it removes it, if it isn't, it adds it
+ * @param req - The request object.
+ * @param res - The response object.
+ */
+const routerGetFavorite = async (req, res) => {
+  try {
+    const { id, eMail } = req.body;
+    let users = await Users.find({ eMail: eMail });
+    let restaurant = await Restaurants.findById({ _id: id });
+    let favorites = users[0].favorites;
+
+    let flag = [];
+    if (favorites) {
+      favorites.map((element, index) => {
+        if (JSON.stringify(element._id) === JSON.stringify(id)) {
+          flag.push(element);
+          users[0].favorites.splice(index, 1);
+        }
+      });
+      if (flag.length === 0) favorites.push(restaurant);
+    } else favorites.push(restaurant);
+    await userSchema.updateOne({ _id: users[0].id }, { $set: favorites });
+    await users[0].save();
+    res.status(200).json(users[0].favorites);
+  } catch (error) {
+    res.status(500).send(`{messaje: ${error}}`);
+  }
+};
+
+/**
+ * It's a function that receives a request and a response, and it tries to find a user by its id, and
+ * if it finds it, it returns the user, and if it doesn't find it, it returns a message saying that the
+ * user doesn't exist
+ * @param req - The request object represents the HTTP request and has properties for the request query
+ * string, parameters, body, HTTP headers, and so on.
+ * @param res - the response object
+ */
+const routerGetByidUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userSchema.findById({ _id: id }).populate("review", {
+      description: 1,
+      rate: 1,
+      restaurant: 1,
+    });
+    user
+      ? res.status(200).json(user)
+      : res.status(201).json({
+          message: "the user you are trying to search for does not exist",
+        });
+  } catch (error) {
+    res.status(500).json({ messaje: `${error}` });
+  }
+};
+
+/**
+ * It searches for a user by id, and if it finds it, it changes the baneado property of the user to the
+ * opposite of what it was before
+ * @param req - The request object represents the HTTP request and has properties for the request query
+ * string, parameters, body, HTTP headers, and so on.
+ * @param res - The response object.
+ */
+const routerBanearOEnableUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userSchema.findById({ _id: id });
+    let baneado = user.baneado;
+    if (user) {
+      if (baneado === false) baneado = true;
+      else baneado = false;
+    } else
+      res.status(201).json({
+        message: "the user you are trying to search for does not exist",
+      });
+    await userSchema.updateOne({ _id: id }, { $set: { baneado } });
+
+    baneado
+      ? res
+          .status(200)
+          .json({ message: "The user is temporarily or permanently disabled." })
+      : res.status(200).json({ message: "the user is enabled" });
+  } catch (error) {
+    res.status(500).json({ messaje: `${error}` });
+  }
+};
+
+module.exports = {
+  routerGetUser,
+  routerPostUser,
+  routerPostSignin,
+  routerGetFavorite,
+  routerGetByidUser,
+  routerBanearOEnableUser,
+};

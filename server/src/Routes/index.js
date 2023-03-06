@@ -7,7 +7,7 @@ const routerProduct = require("./Products");
 const routerRestaurants = require("./Restaurants");
 
 router.use("/users", routerUser);
-router.use("/review", routerReview);
+router.use("/reviews", routerReview);
 router.use("/products", routerProduct);
 router.use("/restaurants", routerRestaurants);
 
