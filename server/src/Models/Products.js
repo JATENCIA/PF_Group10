@@ -38,13 +38,6 @@ const productSchema = mongoose.Schema({
     maxLength: 500,
   },
 
-  review: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: "Review",
-    },
-  ],
-
   restaurant: {
     type: mongoose.Types.ObjectId,
     ref: "Restaurants",

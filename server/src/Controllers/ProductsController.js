@@ -10,14 +10,21 @@ const Restaurants = require("../Models/Restaurants");
 const routerGetProducts = async (req, res) => {
   try {
     const { name } = req.query;
-    const products = await Products.find({});
+    const products = await Products.find({}).populate("restaurant", {
+      name: 1,
+      image: 1,
+      eMail: 1,
+      location: 1,
+      telephone: 1,
+    });
 
     if (name) {
       let product = products.filter((product) =>
         product.name.toLowerCase().includes(name.toLowerCase())
       );
+
       product.length
-        ? res.status(200).json(product)
+        ? res.status(200).json({ product: product })
         : res
             .status(201)
             .json({ messaje: "sorry, this option is not available" });
@@ -40,7 +47,7 @@ const routerPostProdusct = async (req, res) => {
 
     const newProduct = new Products({
       name: product.name,
-      image: product.image,
+      image: product.image || "https://svgsilh.com/svg_v2/2085075.svg",
       price: product.price,
       discount: product.discount,
       restaurant: restaurant._id,
@@ -56,4 +63,69 @@ const routerPostProdusct = async (req, res) => {
   }
 };
 
-module.exports = { routerGetProducts, routerPostProdusct };
+/**
+ * It's a function that receives a request and a response, and it returns a product by id
+ * @param req - The request object represents the HTTP request and has properties for the request query
+ * string, parameters, body, HTTP headers, and so on.
+ * @param res - The response object.
+ */
+const routerGetByidProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Products.findById({ _id: id }).populate(
+      "restaurant",
+      {
+        name: 1,
+        image: 1,
+        eMail: 1,
+        location: 1,
+        telephone: 1,
+      }
+    );
+
+    product
+      ? res.status(200).json(product)
+      : res
+          .status(201)
+          .json({ messaje: "sorry, this option is not available" });
+  } catch (error) {
+    res.status(500).json({ messaje: `${error}` });
+  }
+};
+
+/**
+ * It searches for a product by id, and if it exists, it changes the baneado property to true or false
+ * @param req - the request object
+ * @param res - the response object
+ */
+const routerBanearOEnableProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Products.findById({ _id: id });
+
+    let baneado = product.baneado;
+    if (product) {
+      if (baneado === false) baneado = true;
+      else baneado = false;
+    } else
+      res.status(201).json({
+        message: "the product you are trying to search for does not exist",
+      });
+    await Products.updateOne({ _id: id }, { $set: { baneado } });
+
+    baneado
+      ? res.status(200).json({
+          message: "The product is temporarily or permanently disabled.",
+        })
+      : res.status(200).json({ message: "the restaurant is enabled" });
+  } catch (error) {
+    res.status(500).json({ messaje: `${error}` });
+  }
+};
+
+module.exports = {
+  routerGetProducts,
+  routerPostProdusct,
+  routerGetByidProduct,
+  routerBanearOEnableProduct,
+};

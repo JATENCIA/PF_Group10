@@ -17,9 +17,9 @@ const reviewSchema = mongoose.Schema({
     ref: "Users",
   },
 
-  product: {
+  restaurant: {
     type: mongoose.Types.ObjectId,
-    ref: "Products",
+    ref: "Restaurants",
   },
 
   baneado: {
@@ -28,4 +28,4 @@ const reviewSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Review", reviewSchema);
+module.exports = mongoose.model("Reviews", reviewSchema);

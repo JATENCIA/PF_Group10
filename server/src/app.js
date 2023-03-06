@@ -3,7 +3,7 @@ const app = express();
 const path = require("path");
 const morgan = require("morgan");
 const { MONGODB } = require("../db");
-const router = require("./Routes/Index");
+const router = require("./Routes");
 const cookieParser = require("cookie-parser");
 
 app.use(express.json());
